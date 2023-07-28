@@ -1,0 +1,22 @@
+- name: Install c2 forwarders
+  hosts: all
+  remote_user: ubuntu
+  become: yes
+  tasks:
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: files/forwarder
+        dest: /opt/forwarder
+        mode: '0755'
+
+    - name: Copy service file
+      ansible.builtin.template:
+        src: files/forwarder.service.j2
+        dest: /etc/systemd/system/forwarder.service
+        mode: '0644'
+
+    - name: Start service
+      ansible.builtin.service:
+        state: restarted
+        daemon_reload: yes
+        name: forwarder 

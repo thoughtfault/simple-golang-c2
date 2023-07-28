@@ -1,0 +1,22 @@
+- name: Install c2 server
+  hosts: all
+  remote_user: ubuntu
+  become: yes
+  tasks:
+    - name: Copy binary
+      ansible.builtin.copy:
+        src: files/server
+        dest: /opt/server
+        mode: '0755'
+
+    - name: Copy service file
+      ansible.builtin.copy:
+        src: files/server.service
+        dest: /etc/systemd/system/server.service
+        mode: '0644'
+
+    - name: Start service
+      ansible.builtin.service:
+        state: restarted
+        daemon_reload: yes
+        name: server
